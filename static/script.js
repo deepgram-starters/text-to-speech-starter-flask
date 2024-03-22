@@ -50,6 +50,8 @@ function stopAudio() {
   if (audio) {
     audio.pause();
     audio.currentTime = 0;
+    playState = PLAY_STATES.NO_AUDIO;
+    updatePlayButton();
   }
 }
 
