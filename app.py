@@ -12,7 +12,10 @@ def synthesize_audio(text, model):
     try:
         deepgram = DeepgramClient(os.environ.get("DEEPGRAM_API_KEY"))
         options = SpeakOptions(model=model)
-        filename = os.path.join(app.static_folder, "output.mp3")
+        audio_folder = os.path.join(app.static_folder, 'audio')
+        if not os.path.exists(audio_folder):
+            os.makedirs(audio_folder)
+        filename = os.path.join(app.static_folder, audio_folder, "output.mp3")
         deepgram.speak.v("1").save(filename, {"text":text}, options)
         return filename
     except Exception as e:
@@ -33,8 +36,7 @@ def synthesize_speech():
             raise ValueError("Text is required in the request")
 
         audio_file = synthesize_audio(text, model)
-        audio_url = f"{request.url_root}static/{os.path.basename(audio_file)}"
-        print(f"Audio URL: {audio_url}")
+        audio_url = f"{request.url_root}static/audio/{os.path.basename(audio_file)}"
 
         return jsonify({"success": True, "audioUrl": audio_url})
 
