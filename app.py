@@ -1,6 +1,7 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, Response, jsonify
 from dotenv import load_dotenv
 import os
+import io
 
 from deepgram import DeepgramClient, SpeakOptions
 
@@ -12,12 +13,9 @@ def synthesize_audio(text, model):
     try:
         deepgram = DeepgramClient(os.environ.get("DEEPGRAM_API_KEY"))
         options = SpeakOptions(model=model)
-        audio_folder = os.path.join(app.static_folder, 'audio')
-        if not os.path.exists(audio_folder):
-            os.makedirs(audio_folder)
-        filename = os.path.join(app.static_folder, audio_folder, "output.mp3")
-        deepgram.speak.v("1").save(filename, {"text":text}, options)
-        return filename
+        dg_stream = deepgram.speak.v("1").stream({"text":text}, options)        
+        return dg_stream
+
     except Exception as e:
         raise ValueError(f"Speech synthesis failed: {str(e)}")
 
@@ -35,13 +33,19 @@ def synthesize_speech():
         if not text:
             raise ValueError("Text is required in the request")
 
-        audio_file = synthesize_audio(text, model)
-        audio_url = f"{request.url_root}static/audio/{os.path.basename(audio_file)}"
+        response = synthesize_audio(text, model)
 
-        return jsonify({"success": True, "audioUrl": audio_url})
+        def generate_audio():
+            # Yield the audio data incrementally
+            chunk_size = 1024
+            while True:
+                chunk = response.stream.read(chunk_size)
+                if not chunk:
+                    break
+                yield chunk
 
-    except ValueError as ve:
-        return jsonify({"success": False, "error": str(ve)})
+        # Return a Response object with the generator function
+        return Response(generate_audio(), mimetype='audio/wav')
 
     except Exception as e:
         return jsonify({"success": False, "error": "Internal server error"}), 500
