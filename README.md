@@ -25,7 +25,7 @@ Go to GitHub and [clone the repository](https://github.com/deepgram-devs/text-to
 Install the project dependencies.
 
 ```bash
-npm install
+pip install -r requirements.txt
 ```
 
 #### Edit the config file
@@ -42,7 +42,7 @@ The `main` branch demonstrates a basic implementation, where text is sent to the
 
 Checkout the other branches to see added functionality:
 
-- [output streaming](): Demonstrates how to take advantage of Deepgram's output streaming feature. This example streams the audio response to the client as it is being generated.
+- [output streaming](https://github.com/deepgram-starters/text-to-speech-starter-python/tree/output-streaming): Demonstrates how to take advantage of Deepgram's output streaming feature. This example streams the audio response to the client as it is being generated.
 
 ```bash
 git checkout output-streaming
