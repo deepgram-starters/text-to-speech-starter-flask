@@ -1,0 +1,17 @@
+[meta]
+  title = "Text-to-Speech Starter (Flask)"
+  description = "This example app demonstrates how to use the Deepgram Text-to-Speech API with Python using Flask, a micro web framework for Python"
+  author = "Deepgram DX Team <devrel@deepgram.com> (https://developers.deepgram.com)"
+  useCase = "TTS"
+  language = "Python"
+  framework = "Flask"
+
+[build]
+  command = "pip install -r requirements.txt"
+
+[config]
+  sample = "sample.env"
+  output = ".env"
+
+[post-build]
+  message = "Run `python app.py` to get up and running."
