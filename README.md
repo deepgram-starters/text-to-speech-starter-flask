@@ -1,4 +1,4 @@
-# Text-to-Speech Starter (Python)
+# Text-to-Speech Flask Starter
 
 This example app demonstrates how to use the Deepgram Text-to-Speech API with Python using Flask, a micro web framework for Python.
 
